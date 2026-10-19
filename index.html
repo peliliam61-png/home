@@ -260,6 +260,12 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             background: var(--surface);
+            transition: 0.2s ease;
+        }
+
+        .download-item:hover {
+            border-color: #68616a;
+            background: var(--surface-hover);
         }
 
         .download-info {
@@ -278,6 +284,7 @@
             border-radius: 10px;
             background: #30343e;
             color: var(--orange);
+            font-family: "Consolas", monospace;
             font-size: 12px;
             font-weight: 800;
         }
@@ -285,6 +292,7 @@
         .download-info h3 {
             margin: 0;
             font-size: 15px;
+            overflow-wrap: anywhere;
         }
 
         .download-info p {
@@ -292,6 +300,27 @@
             color: var(--muted);
             font-size: 12px;
             overflow-wrap: anywhere;
+        }
+
+        .download-status {
+            padding: 20px;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            color: var(--muted);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .download-status.error {
+            border-color: #814b43;
+            color: #ffb3a7;
+        }
+
+        .download-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         .about-box {
@@ -348,6 +377,11 @@
 
             .download-item {
                 align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .download-actions {
+                margin-left: 57px;
             }
 
             .download-item .button {
@@ -372,7 +406,8 @@
                 <a href="#projects">Projects</a>
                 <a href="#downloads">Downloads</a>
                 <a href="#about">About</a>
-                <a href="https://github.com/" target="_blank"
+                <a href="https://github.com/peliliam61-png"
+                   target="_blank"
                    rel="noopener noreferrer">GitHub ↗</a>
             </div>
         </nav>
@@ -427,7 +462,9 @@
                             <span class="tag">Geography</span>
                         </div>
                         <a class="card-link"
-                           href="https://github.com/">
+                           href="https://github.com/peliliam61-png"
+                           target="_blank"
+                           rel="noopener noreferrer">
                             View source ↗
                         </a>
                     </article>
@@ -445,7 +482,9 @@
                             <span class="tag">AI</span>
                         </div>
                         <a class="card-link"
-                           href="https://github.com/">
+                           href="https://github.com/peliliam61-png"
+                           target="_blank"
+                           rel="noopener noreferrer">
                             View source ↗
                         </a>
                     </article>
@@ -464,7 +503,9 @@
                             <span class="tag">JavaScript</span>
                         </div>
                         <a class="card-link"
-                           href="https://github.com/">
+                           href="https://github.com/peliliam61-png"
+                           target="_blank"
+                           rel="noopener noreferrer">
                             View source ↗
                         </a>
                     </article>
@@ -476,44 +517,16 @@
                 <div class="section-heading">
                     <div>
                         <h2>Downloads</h2>
-                        <p>Files and tools available to download.</p>
+                        <p>Files and tools available to download from Liam's Lab.</p>
                     </div>
+
+                    <button class="button" id="refresh-downloads" type="button">
+                        Refresh files
+                    </button>
                 </div>
 
-                <div class="download-list">
-
-                    <!-- DOWNLOAD 1 -->
-                    <div class="download-item">
-                        <div class="download-info">
-                            <div class="file-icon">PY</div>
-                            <div>
-                                <h3>Hold Key Script</h3>
-                                <p>Python automation script</p>
-                            </div>
-                        </div>
-
-                        <a class="button primary"
-                           href="files/hold_key.py" download>
-                            Download
-                        </a>
-                    </div>
-
-                    <!-- DOWNLOAD 2 -->
-                    <div class="download-item">
-                        <div class="download-info">
-                            <div class="file-icon">ZIP</div>
-                            <div>
-                                <h3>Project Source Files</h3>
-                                <p>Example project archive</p>
-                            </div>
-                        </div>
-
-                        <a class="button primary"
-                           href="files/project-source.zip" download>
-                            Download
-                        </a>
-                    </div>
-
+                <div class="download-list" id="download-list" aria-live="polite">
+                    <div class="download-status">Loading files...</div>
                 </div>
             </section>
 
@@ -546,8 +559,170 @@
     </footer>
 
     <script>
+        const API_URL = "https://backend.peliliam61.workers.dev";
+
+        const downloadList = document.getElementById("download-list");
+        const refreshButton = document.getElementById("refresh-downloads");
+
         document.getElementById("year").textContent =
             new Date().getFullYear();
+
+        function formatFileSize(bytes) {
+            if (!Number.isFinite(bytes) || bytes < 0) {
+                return "Unknown size";
+            }
+
+            if (bytes < 1024) {
+                return `${bytes} B`;
+            }
+
+            if (bytes < 1024 * 1024) {
+                return `${(bytes / 1024).toFixed(1)} KB`;
+            }
+
+            if (bytes < 1024 * 1024 * 1024) {
+                return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+            }
+
+            return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+        }
+
+        function getFileType(filename) {
+            const extension = filename.includes(".")
+                ? filename.split(".").pop().toUpperCase()
+                : "FILE";
+
+            return extension.length > 5 ? "FILE" : extension;
+        }
+
+        function showDownloadStatus(message, isError = false) {
+            const status = document.createElement("div");
+            status.className = isError
+                ? "download-status error"
+                : "download-status";
+            status.textContent = message;
+
+            downloadList.replaceChildren(status);
+        }
+
+        function createDownloadItem(file) {
+            const item = document.createElement("div");
+            item.className = "download-item";
+
+            const info = document.createElement("div");
+            info.className = "download-info";
+
+            const icon = document.createElement("div");
+            icon.className = "file-icon";
+            icon.textContent = getFileType(file.name);
+
+            const details = document.createElement("div");
+
+            const title = document.createElement("h3");
+            title.textContent = file.name;
+
+            const metadata = document.createElement("p");
+            metadata.textContent = formatFileSize(file.size);
+
+            if (file.uploaded) {
+                const uploadedDate = new Date(file.uploaded);
+
+                if (!Number.isNaN(uploadedDate.getTime())) {
+                    metadata.textContent +=
+                        " · Uploaded " +
+                        uploadedDate.toLocaleDateString();
+                }
+            }
+
+            details.append(title, metadata);
+            info.append(icon, details);
+
+            const actions = document.createElement("div");
+            actions.className = "download-actions";
+
+            const downloadButton = document.createElement("a");
+            downloadButton.className = "button primary";
+            downloadButton.textContent = "Download";
+            downloadButton.href =
+                API_URL + "/api/download/" +
+                encodeURIComponent(file.name);
+            downloadButton.setAttribute("download", file.name);
+
+            actions.append(downloadButton);
+            item.append(info, actions);
+
+            return item;
+        }
+
+        async function loadDownloads() {
+            refreshButton.disabled = true;
+            refreshButton.textContent = "Loading...";
+            showDownloadStatus("Loading files from Liam's Lab...");
+
+            try {
+                const response = await fetch(API_URL + "/api/files", {
+                    method: "GET",
+                    cache: "no-store"
+                });
+
+                if (!response.ok) {
+                    throw new Error(
+                        `The file server returned HTTP ${response.status}.`
+                    );
+                }
+
+                const data = await response.json();
+
+                if (!Array.isArray(data.files)) {
+                    throw new Error("The file server returned an invalid response.");
+                }
+
+                const files = data.files
+                    .filter(file =>
+                        file &&
+                        typeof file.name === "string" &&
+                        file.name.length > 0 &&
+                        !file.name.includes("/") &&
+                        !file.name.includes("\\")
+                    )
+                    .sort((a, b) =>
+                        a.name.localeCompare(b.name, undefined, {
+                            sensitivity: "base",
+                            numeric: true
+                        })
+                    );
+
+                if (files.length === 0) {
+                    showDownloadStatus(
+                        "No downloads yet. Check back when new files are uploaded."
+                    );
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+
+                for (const file of files) {
+                    fragment.appendChild(createDownloadItem(file));
+                }
+
+                downloadList.replaceChildren(fragment);
+            } catch (error) {
+                console.error("Unable to load downloads:", error);
+
+                showDownloadStatus(
+                    "Couldn't load downloads. Check your connection and try refreshing. " +
+                    "If the problem continues, the file server may need configuration.",
+                    true
+                );
+            } finally {
+                refreshButton.disabled = false;
+                refreshButton.textContent = "Refresh files";
+            }
+        }
+
+        refreshButton.addEventListener("click", loadDownloads);
+
+        loadDownloads();
     </script>
 
 </body>

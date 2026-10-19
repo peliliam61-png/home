@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#17191e">
+    <title>Liam's Lab | Coding Projects</title>
+
+    <style>
+        :root {
+            --background: #17191e;
+            --surface: #20232a;
+            --surface-hover: #282c34;
+            --orange: #ff8a32;
+            --text: #f2f2f5;
+            --muted: #a2a6b1;
+            --border: #353943;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1100px, calc(100% - 36px));
+            margin: auto;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(23, 25, 30, 0.96);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--orange);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .hero {
+            padding: 100px 0 80px;
+        }
+
+        .eyebrow {
+            color: var(--orange);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            max-width: 760px;
+            margin: 18px 0;
+            font-size: clamp(38px, 7vw, 68px);
+            line-height: 1.08;
+            letter-spacing: -2.5px;
+        }
+
+        h1 span {
+            color: var(--orange);
+        }
+
+        .hero p {
+            max-width: 620px;
+            color: var(--muted);
+            font-size: 17px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 19px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            border-color: var(--orange);
+        }
+
+        .button.primary {
+            background: var(--orange);
+            border-color: var(--orange);
+            color: #191919;
+            font-weight: 700;
+        }
+
+        section {
+            padding: 45px 0 60px;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 29px;
+            letter-spacing: -0.7px;
+        }
+
+        .section-heading p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            padding: 23px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface);
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #68616a;
+            background: var(--surface-hover);
+        }
+
+        .project-icon {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 18px;
+            border: 1px solid #704b30;
+            border-radius: 12px;
+            background: #38291f;
+            color: var(--orange);
+            font-family: "Consolas", monospace;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        .card p {
+            flex: 1;
+            margin: 0 0 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            padding: 4px 9px;
+            border-radius: 6px;
+            background: #30343e;
+            color: #d1d4dc;
+            font-family: "Consolas", monospace;
+            font-size: 11px;
+        }
+
+        .card-link {
+            color: var(--orange);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .download-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 17px 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+        }
+
+        .download-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .file-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 43px;
+            height: 43px;
+            border-radius: 10px;
+            background: #30343e;
+            color: var(--orange);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .download-info h3 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .download-info p {
+            margin: 3px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .about-box {
+            padding: 27px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface);
+        }
+
+        .about-box p {
+            max-width: 760px;
+            margin-bottom: 0;
+            color: var(--muted);
+        }
+
+        footer {
+            margin-top: 35px;
+            padding: 25px 0;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (max-width: 800px) {
+            .project-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .hero {
+                padding-top: 75px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .nav-links {
+                gap: 12px;
+                font-size: 12px;
+            }
+
+            .logo {
+                font-size: 15px;
+            }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .download-item {
+                align-items: flex-start;
+            }
+
+            .download-item .button {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            h1 {
+                letter-spacing: -1.5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="container">
+            <a class="logo" href="#">LIAM'S <span>LAB.</span></a>
+
+            <div class="nav-links">
+                <a href="#projects">Projects</a>
+                <a href="#downloads">Downloads</a>
+                <a href="#about">About</a>
+                <a href="https://github.com/" target="_blank"
+                   rel="noopener noreferrer">GitHub ↗</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <div class="eyebrow">Independent developer</div>
+
+                <h1>Building things.<br>
+                    <span>Learning by coding.</span>
+                </h1>
+
+                <p>
+                    Welcome to my coding lab. This is where I share my
+                    programming projects, experiments, tools and files
+                    that other people can download.
+                </p>
+
+                <div class="buttons">
+                    <a class="button primary" href="#projects">
+                        Explore projects ↗
+                    </a>
+
+                    <a class="button" href="#downloads">
+                        Browse downloads ↓
+                    </a>
+                </div>
+            </section>
+
+            <section id="projects">
+                <div class="section-heading">
+                    <div>
+                        <h2>Featured projects</h2>
+                        <p>A collection of things I've built.</p>
+                    </div>
+                </div>
+
+                <div class="project-grid">
+
+                    <!-- PROJECT 1 -->
+                    <article class="card">
+                        <div class="project-icon">&gt;_</div>
+                        <h3>World ASCII Map</h3>
+                        <p>
+                            A Python project that generates a detailed
+                            ASCII world map using geographical data.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Geography</span>
+                        </div>
+                        <a class="card-link"
+                           href="https://github.com/">
+                            View source ↗
+                        </a>
+                    </article>
+
+                    <!-- PROJECT 2 -->
+                    <article class="card">
+                        <div class="project-icon">{ }</div>
+                        <h3>Animal Recognition</h3>
+                        <p>
+                            An experimental project exploring animal
+                            identification and image recognition.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">AI</span>
+                        </div>
+                        <a class="card-link"
+                           href="https://github.com/">
+                            View source ↗
+                        </a>
+                    </article>
+
+                    <!-- PROJECT 3 -->
+                    <article class="card">
+                        <div class="project-icon">WEB</div>
+                        <h3>Web Experiments</h3>
+                        <p>
+                            Websites, interactive interfaces and other
+                            experiments built with web technologies.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">HTML</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                        <a class="card-link"
+                           href="https://github.com/">
+                            View source ↗
+                        </a>
+                    </article>
+
+                </div>
+            </section>
+
+            <section id="downloads">
+                <div class="section-heading">
+                    <div>
+                        <h2>Downloads</h2>
+                        <p>Files and tools available to download.</p>
+                    </div>
+                </div>
+
+                <div class="download-list">
+
+                    <!-- DOWNLOAD 1 -->
+                    <div class="download-item">
+                        <div class="download-info">
+                            <div class="file-icon">PY</div>
+                            <div>
+                                <h3>Hold Key Script</h3>
+                                <p>Python automation script</p>
+                            </div>
+                        </div>
+
+                        <a class="button primary"
+                           href="files/hold_key.py" download>
+                            Download
+                        </a>
+                    </div>
+
+                    <!-- DOWNLOAD 2 -->
+                    <div class="download-item">
+                        <div class="download-info">
+                            <div class="file-icon">ZIP</div>
+                            <div>
+                                <h3>Project Source Files</h3>
+                                <p>Example project archive</p>
+                            </div>
+                        </div>
+
+                        <a class="button primary"
+                           href="files/project-source.zip" download>
+                            Download
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="about">
+                <div class="section-heading">
+                    <div>
+                        <h2>About this lab</h2>
+                        <p>A home for my programming projects.</p>
+                    </div>
+                </div>
+
+                <div class="about-box">
+                    <p>
+                        I'm a developer who enjoys experimenting with
+                        code and building useful things. This website
+                        is my personal collection of projects, source
+                        code and downloadable files. More projects will
+                        be added as I build them.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <span>© <span id="year"></span> Liam's Lab</span>
+            <span>Built with HTML, CSS and curiosity.</span>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
+
+</body>
+</html>

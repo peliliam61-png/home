@@ -24,6 +24,7 @@ body {
     font: 15px/1.6 "Segoe UI", Arial, sans-serif;
 }
 button, input { font: inherit; }
+button:disabled { opacity: .55; cursor: not-allowed; }
 .container { width: min(950px, calc(100% - 32px)); margin: auto; }
 header { border-bottom: 1px solid var(--border); }
 nav {
@@ -44,30 +45,57 @@ h1 { font-size: clamp(34px, 6vw, 48px); line-height: 1.15; letter-spacing: -1.5p
 h2 { font-size: 19px; margin: 0; }
 .muted { color: var(--muted); font-size: 12px; margin: 3px 0 0; }
 .button {
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: 10px 15px; border: 1px solid var(--border);
-    border-radius: 9px; background: var(--hover); color: var(--text);
-    cursor: pointer; text-decoration: none; font-size: 13px; font-weight: 650;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--hover);
+    color: var(--text);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 650;
+    transition: border-color .2s, background .2s;
 }
 .button:hover { border-color: var(--orange); }
 .button.primary { background: var(--orange); border-color: var(--orange); color: #191919; }
+.button.primary:hover { background: #ffa052; }
 .dropzone {
-    border: 2px dashed #48414a; border-radius: 12px; padding: 32px 16px;
-    text-align: center; background: #1a1c22; cursor: pointer; transition: .2s;
+    border: 2px dashed #48414a;
+    border-radius: 12px;
+    padding: 32px 16px;
+    text-align: center;
+    background: #1a1c22;
+    cursor: pointer;
+    transition: .2s;
 }
 .dropzone.dragging { border-color: var(--orange); background: #35271d; }
+.dropzone:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
 .upload-icon {
-    width: 48px; height: 48px; display: grid; place-items: center;
-    margin: 0 auto 10px; background: #38291f; color: var(--orange);
-    border-radius: 13px; font-size: 26px;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 10px;
+    background: #38291f;
+    color: var(--orange);
+    border-radius: 13px;
+    font-size: 26px;
 }
 .dropzone p { color: var(--muted); font-size: 13px; margin: 5px 0 15px; }
 input[type=file] { display: none; }
 .field { margin-top: 16px; }
 label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; }
 input[type=password] {
-    width: 100%; background: #17191e; border: 1px solid var(--border);
-    border-radius: 9px; padding: 11px; color: var(--text); outline: none;
+    width: 100%;
+    background: #17191e;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 11px;
+    color: var(--text);
+    outline: none;
 }
 input:focus { border-color: var(--orange); }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
@@ -76,21 +104,34 @@ input:focus { border-color: var(--orange); }
 .status.success { color: #75d6a0; }
 .file-list { display: grid; gap: 10px; }
 .file {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; padding: 13px; background: #1b1e24;
-    border: 1px solid var(--border); border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px;
+    background: #1b1e24;
+    border: 1px solid var(--border);
+    border-radius: 11px;
 }
 .file-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .file-icon {
-    width: 42px; height: 42px; flex-shrink: 0; display: grid; place-items: center;
-    background: #38291f; color: var(--orange); border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: #38291f;
+    color: var(--orange);
+    border-radius: 10px;
     font: bold 11px Consolas, monospace;
 }
-.file-name { overflow-wrap: anywhere; font-size: 14px; font-weight: 650; }
+.file-details { min-width: 0; }
+.file-name { overflow-wrap: anywhere; word-break: break-word; font-size: 14px; font-weight: 650; }
 .file-size { color: var(--muted); font-size: 12px; }
 .empty { text-align: center; padding: 25px 10px; color: var(--muted); font-size: 13px; }
 footer { border-top: 1px solid var(--border); padding: 20px 0; color: var(--muted); font-size: 12px; }
 @media(max-width: 550px) {
+    main { padding-top: 32px; }
     .panel { padding: 15px; }
     .file { align-items: flex-start; flex-wrap: wrap; }
     .file .button { margin-left: 54px; }
@@ -118,7 +159,8 @@ footer { border-top: 1px solid var(--border); padding: 20px 0; color: var(--mute
             </div>
         </div>
 
-        <div class="dropzone" id="dropzone" role="button" tabindex="0">
+        <div class="dropzone" id="dropzone" role="button" tabindex="0"
+             aria-label="Drop files here or select files">
             <div class="upload-icon">↑</div>
             <strong>Drop your files here</strong>
             <p>Multiple files supported. Maximum 25 MB per file.</p>
@@ -129,12 +171,14 @@ footer { border-top: 1px solid var(--border); padding: 20px 0; color: var(--mute
 
         <div class="field">
             <label for="password">Upload password</label>
-            <input id="password" type="password" placeholder="Enter your backend upload password" autocomplete="current-password">
+            <input id="password" type="password"
+                   placeholder="Enter your upload password"
+                   autocomplete="current-password">
         </div>
 
         <div class="actions">
-            <button class="button primary" id="upload">↑ Upload selected files</button>
-            <button class="button" id="clear">Clear selection</button>
+            <button class="button primary" id="upload" type="button">↑ Upload selected files</button>
+            <button class="button" id="clear" type="button">Clear selection</button>
         </div>
         <div class="status" id="status" role="status" aria-live="polite"></div>
     </section>
@@ -145,7 +189,7 @@ footer { border-top: 1px solid var(--border); padding: 20px 0; color: var(--mute
                 <h2>Available downloads</h2>
                 <p class="muted" id="count">Loading files...</p>
             </div>
-            <button class="button" id="refresh">↻ Refresh</button>
+            <button class="button" id="refresh" type="button">↻ Refresh</button>
         </div>
         <div class="file-list" id="files">
             <div class="empty">Connecting to your storage...</div>
@@ -153,14 +197,19 @@ footer { border-top: 1px solid var(--border); padding: 20px 0; color: var(--mute
     </section>
 </main>
 
-<footer><div class="container">© <span id="year"></span> Liam's Lab · Cloudflare R2</div></footer>
+<footer>
+    <div class="container">© <span id="year"></span> Liam's Lab · Cloudflare R2</div>
+</footer>
 
 <script>
+"use strict";
+
 const API = "https://backend.peliliam61.workers.dev";
 const MAX_SIZE = 25 * 1024 * 1024;
 const $ = id => document.getElementById(id);
 
 let selected = [];
+let uploading = false;
 
 $("year").textContent = new Date().getFullYear();
 
@@ -178,39 +227,71 @@ function message(text, type = "") {
 
 function selectFiles(files) {
     selected = Array.from(files || []);
-    message(selected.length ? selected.length + " file(s) selected" : "");
+    message(
+        selected.length
+            ? selected.length + " file(s) selected."
+            : "No files selected."
+    );
 }
 
-$("choose").onclick = () => $("picker").click();
-$("dropzone").onclick = event => {
-    if (!event.target.closest("button")) $("picker").click();
-};
-$("dropzone").onkeydown = event => {
+function validFileName(name) {
+    return typeof name === "string" &&
+        name.length > 0 &&
+        name.length <= 255 &&
+        name !== "." &&
+        name !== ".." &&
+        !/[\/\\\u0000-\u001f\u007f]/.test(name);
+}
+
+$("choose").addEventListener("click", () => {
+    $("picker").click();
+});
+
+$("dropzone").addEventListener("click", event => {
+    if (!event.target.closest("button")) {
+        $("picker").click();
+    }
+});
+
+$("dropzone").addEventListener("keydown", event => {
+    if (event.target !== $("dropzone")) return;
+
     if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         $("picker").click();
     }
-};
-$("picker").onchange = () => selectFiles($("picker").files);
-$("clear").onclick = () => {
+});
+
+$("picker").addEventListener("change", () => {
+    selectFiles($("picker").files);
+});
+
+$("clear").addEventListener("click", () => {
+    if (uploading) return;
+
     selected = [];
     $("picker").value = "";
     message("Selection cleared.");
-};
+});
 
 ["dragenter", "dragover"].forEach(name => {
     $("dropzone").addEventListener(name, event => {
         event.preventDefault();
+        event.dataTransfer.dropEffect = "copy";
         $("dropzone").classList.add("dragging");
     });
 });
+
 ["dragleave", "drop"].forEach(name => {
     $("dropzone").addEventListener(name, event => {
         event.preventDefault();
         $("dropzone").classList.remove("dragging");
     });
 });
-$("dropzone").addEventListener("drop", event => selectFiles(event.dataTransfer.files));
+
+$("dropzone").addEventListener("drop", event => {
+    selectFiles(event.dataTransfer.files);
+});
 
 async function loadFiles() {
     $("refresh").disabled = true;
@@ -218,18 +299,31 @@ async function loadFiles() {
     $("files").replaceChildren();
 
     try {
-        const response = await fetch(API + "/api/files", { cache: "no-store" });
-        if (!response.ok) throw new Error("HTTP " + response.status);
+        const response = await fetch(API + "/api/files", {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
 
         const data = await response.json();
-        if (!Array.isArray(data.files)) throw new Error("Invalid file list");
 
-        const files = data.files.filter(file =>
-            file && typeof file.name === "string" &&
-            !file.name.includes("/") && !file.name.includes("\\")
-        ).sort((a, b) => a.name.localeCompare(b.name));
+        if (!Array.isArray(data.files)) {
+            throw new Error("Invalid file list.");
+        }
 
-        $("count").textContent = files.length +
+        const files = data.files
+            .filter(file =>
+                file &&
+                validFileName(file.name) &&
+                Number.isFinite(Number(file.size)) &&
+                Number(file.size) >= 0
+            )
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+        $("count").textContent =
+            files.length +
             (files.length === 1 ? " file available" : " files available");
 
         if (!files.length) {
@@ -240,7 +334,7 @@ async function loadFiles() {
             return;
         }
 
-        files.forEach(file => {
+        for (const file of files) {
             const row = document.createElement("div");
             row.className = "file";
 
@@ -249,17 +343,23 @@ async function loadFiles() {
 
             const icon = document.createElement("div");
             icon.className = "file-icon";
-            const ext = file.name.includes(".") ? file.name.split(".").pop().toUpperCase() : "FILE";
-            icon.textContent = ext.length <= 5 ? ext : "FILE";
+
+            const extension = file.name.includes(".")
+                ? file.name.split(".").pop().toUpperCase()
+                : "FILE";
+
+            icon.textContent = extension.length <= 5 ? extension : "FILE";
 
             const details = document.createElement("div");
+            details.className = "file-details";
+
             const name = document.createElement("div");
             name.className = "file-name";
             name.textContent = file.name;
 
             const size = document.createElement("div");
             size.className = "file-size";
-            size.textContent = sizeText(Number(file.size) || 0);
+            size.textContent = sizeText(Number(file.size));
 
             details.append(name, size);
             info.append(icon, details);
@@ -272,12 +372,15 @@ async function loadFiles() {
 
             row.append(info, link);
             $("files").append(row);
-        });
+        }
     } catch (error) {
         $("count").textContent = "Could not load files";
+
         const empty = document.createElement("div");
         empty.className = "empty";
-        empty.textContent = "Connection failed. Check your backend and try Refresh.";
+        empty.textContent =
+            "Connection failed. Check your Worker deployment and R2 binding, then try Refresh.";
+
         $("files").append(empty);
     } finally {
         $("refresh").disabled = false;
@@ -285,6 +388,8 @@ async function loadFiles() {
 }
 
 async function uploadFiles() {
+    if (uploading) return;
+
     const password = $("password").value;
 
     if (!password) {
@@ -299,25 +404,33 @@ async function uploadFiles() {
     }
 
     const invalid = selected.find(file =>
-        !file.size || file.size > MAX_SIZE ||
-        !file.name || file.name.includes("/") ||
-        file.name.includes("\\") || file.name === "." ||
-        file.name === ".." || /[\u0000-\u001f\u007f]/.test(file.name)
+        !file.size ||
+        file.size > MAX_SIZE ||
+        !validFileName(file.name)
     );
 
     if (invalid) {
-        message(invalid.name + " is empty, invalid, or larger than 25 MB.", "error");
+        message(
+            invalid.name +
+            " is empty, has an invalid filename, or exceeds 25 MB.",
+            "error"
+        );
         return;
     }
 
+    uploading = true;
     $("upload").disabled = true;
     $("choose").disabled = true;
+    $("clear").disabled = true;
 
     let completed = 0;
 
     try {
         for (const file of selected) {
-            message("Uploading " + file.name + " (" + (completed + 1) + "/" + selected.length + ")...");
+            message(
+                "Uploading " + file.name + " (" +
+                (completed + 1) + "/" + selected.length + ")..."
+            );
 
             const response = await fetch(
                 API + "/api/upload?name=" + encodeURIComponent(file.name),
@@ -332,24 +445,45 @@ async function uploadFiles() {
             );
 
             const result = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(result.error || "Upload failed: HTTP " + response.status);
+
+            if (!response.ok) {
+                throw new Error(
+                    result.error || "Upload failed: HTTP " + response.status
+                );
+            }
+
             completed++;
         }
 
         selected = [];
         $("picker").value = "";
-        message(completed + " file(s) uploaded successfully.", "success");
+        $("password").value = "";
+
+        message(
+            completed + " file(s) uploaded successfully.",
+            "success"
+        );
+
         await loadFiles();
     } catch (error) {
-        message(error.message || "Upload failed.", "error");
+        message(
+            completed > 0
+                ? completed + " file(s) uploaded. " + (error.message || "The next upload failed.")
+                : error.message || "Upload failed. Check your password and try again.",
+            "error"
+        );
+
+        await loadFiles();
     } finally {
+        uploading = false;
         $("upload").disabled = false;
         $("choose").disabled = false;
+        $("clear").disabled = false;
     }
 }
 
-$("upload").onclick = uploadFiles;
-$("refresh").onclick = loadFiles;
+$("upload").addEventListener("click", uploadFiles);
+$("refresh").addEventListener("click", loadFiles);
 
 loadFiles();
 </script>

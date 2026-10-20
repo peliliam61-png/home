@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17191e">
+<title>Liam's Lab | Files</title>
+<style>
+:root {
+    --bg: #17191e;
+    --panel: #20232a;
+    --hover: #292d36;
+    --orange: #ff8a32;
+    --text: #f2f2f5;
+    --muted: #a2a6b1;
+    --border: #353943;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.6 "Segoe UI", Arial, sans-serif;
+}
+button, input { font: inherit; }
+.container { width: min(950px, calc(100% - 32px)); margin: auto; }
+header { border-bottom: 1px solid var(--border); }
+nav {
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo { font-size: 19px; font-weight: 800; text-decoration: none; color: white; }
+.logo span, h1 span { color: var(--orange); }
+nav a:last-child { color: var(--muted); text-decoration: none; font-size: 13px; }
+main { padding: 50px 0 70px; }
+.eyebrow { color: var(--orange); text-transform: uppercase; letter-spacing: 2px; font-size: 11px; font-weight: 800; }
+h1 { font-size: clamp(34px, 6vw, 48px); line-height: 1.15; letter-spacing: -1.5px; margin: 10px 0; }
+.subtitle { color: var(--muted); margin: 0; }
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 15px; padding: 22px; margin-top: 26px; }
+.heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+h2 { font-size: 19px; margin: 0; }
+.muted { color: var(--muted); font-size: 12px; margin: 3px 0 0; }
+.button {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 10px 15px; border: 1px solid var(--border);
+    border-radius: 9px; background: var(--hover); color: var(--text);
+    cursor: pointer; text-decoration: none; font-size: 13px; font-weight: 650;
+}
+.button:hover { border-color: var(--orange); }
+.button.primary { background: var(--orange); border-color: var(--orange); color: #191919; }
+.dropzone {
+    border: 2px dashed #48414a; border-radius: 12px; padding: 32px 16px;
+    text-align: center; background: #1a1c22; cursor: pointer; transition: .2s;
+}
+.dropzone.dragging { border-color: var(--orange); background: #35271d; }
+.upload-icon {
+    width: 48px; height: 48px; display: grid; place-items: center;
+    margin: 0 auto 10px; background: #38291f; color: var(--orange);
+    border-radius: 13px; font-size: 26px;
+}
+.dropzone p { color: var(--muted); font-size: 13px; margin: 5px 0 15px; }
+input[type=file] { display: none; }
+.field { margin-top: 16px; }
+label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+input[type=password] {
+    width: 100%; background: #17191e; border: 1px solid var(--border);
+    border-radius: 9px; padding: 11px; color: var(--text); outline: none;
+}
+input:focus { border-color: var(--orange); }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.status { color: var(--muted); font-size: 13px; margin-top: 12px; overflow-wrap: anywhere; }
+.status.error { color: #ff9388; }
+.status.success { color: #75d6a0; }
+.file-list { display: grid; gap: 10px; }
+.file {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 13px; background: #1b1e24;
+    border: 1px solid var(--border); border-radius: 11px;
+}
+.file-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.file-icon {
+    width: 42px; height: 42px; flex-shrink: 0; display: grid; place-items: center;
+    background: #38291f; color: var(--orange); border-radius: 10px;
+    font: bold 11px Consolas, monospace;
+}
+.file-name { overflow-wrap: anywhere; font-size: 14px; font-weight: 650; }
+.file-size { color: var(--muted); font-size: 12px; }
+.empty { text-align: center; padding: 25px 10px; color: var(--muted); font-size: 13px; }
+footer { border-top: 1px solid var(--border); padding: 20px 0; color: var(--muted); font-size: 12px; }
+@media(max-width: 550px) {
+    .panel { padding: 15px; }
+    .file { align-items: flex-start; flex-wrap: wrap; }
+    .file .button { margin-left: 54px; }
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="container">
+        <a class="logo" href="./">LIAM'S <span>LAB.</span></a>
+        <a href="./">← Home</a>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="eyebrow">Cloud file storage</div>
+    <h1>My <span>Files.</span></h1>
+    <p class="subtitle">Upload, store and download files from Liam's Lab.</p>
+
+    <section class="panel">
+        <div class="heading">
+            <div>
+                <h2>Upload files</h2>
+                <p class="muted">Drag files here or select them manually.</p>
+            </div>
+        </div>
+
+        <div class="dropzone" id="dropzone" role="button" tabindex="0">
+            <div class="upload-icon">↑</div>
+            <strong>Drop your files here</strong>
+            <p>Multiple files supported. Maximum 25 MB per file.</p>
+            <button class="button" type="button" id="choose">Choose files</button>
+        </div>
+
+        <input id="picker" type="file" multiple>
+
+        <div class="field">
+            <label for="password">Upload password</label>
+            <input id="password" type="password" placeholder="Enter your backend upload password" autocomplete="current-password">
+        </div>
+
+        <div class="actions">
+            <button class="button primary" id="upload">↑ Upload selected files</button>
+            <button class="button" id="clear">Clear selection</button>
+        </div>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+        <div class="heading">
+            <div>
+                <h2>Available downloads</h2>
+                <p class="muted" id="count">Loading files...</p>
+            </div>
+            <button class="button" id="refresh">↻ Refresh</button>
+        </div>
+        <div class="file-list" id="files">
+            <div class="empty">Connecting to your storage...</div>
+        </div>
+    </section>
+</main>
+
+<footer><div class="container">© <span id="year"></span> Liam's Lab · Cloudflare R2</div></footer>
+
+<script>
+const API = "https://backend.peliliam61.workers.dev";
+const MAX_SIZE = 25 * 1024 * 1024;
+const $ = id => document.getElementById(id);
+
+let selected = [];
+
+$("year").textContent = new Date().getFullYear();
+
+function sizeText(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+    if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + " MB";
+    return (bytes / 1073741824).toFixed(2) + " GB";
+}
+
+function message(text, type = "") {
+    $("status").textContent = text;
+    $("status").className = "status " + type;
+}
+
+function selectFiles(files) {
+    selected = Array.from(files || []);
+    message(selected.length ? selected.length + " file(s) selected" : "");
+}
+
+$("choose").onclick = () => $("picker").click();
+$("dropzone").onclick = event => {
+    if (!event.target.closest("button")) $("picker").click();
+};
+$("dropzone").onkeydown = event => {
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        $("picker").click();
+    }
+};
+$("picker").onchange = () => selectFiles($("picker").files);
+$("clear").onclick = () => {
+    selected = [];
+    $("picker").value = "";
+    message("Selection cleared.");
+};
+
+["dragenter", "dragover"].forEach(name => {
+    $("dropzone").addEventListener(name, event => {
+        event.preventDefault();
+        $("dropzone").classList.add("dragging");
+    });
+});
+["dragleave", "drop"].forEach(name => {
+    $("dropzone").addEventListener(name, event => {
+        event.preventDefault();
+        $("dropzone").classList.remove("dragging");
+    });
+});
+$("dropzone").addEventListener("drop", event => selectFiles(event.dataTransfer.files));
+
+async function loadFiles() {
+    $("refresh").disabled = true;
+    $("count").textContent = "Loading...";
+    $("files").replaceChildren();
+
+    try {
+        const response = await fetch(API + "/api/files", { cache: "no-store" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+
+        const data = await response.json();
+        if (!Array.isArray(data.files)) throw new Error("Invalid file list");
+
+        const files = data.files.filter(file =>
+            file && typeof file.name === "string" &&
+            !file.name.includes("/") && !file.name.includes("\\")
+        ).sort((a, b) => a.name.localeCompare(b.name));
+
+        $("count").textContent = files.length +
+            (files.length === 1 ? " file available" : " files available");
+
+        if (!files.length) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            empty.textContent = "No files yet. Upload your first file above.";
+            $("files").append(empty);
+            return;
+        }
+
+        files.forEach(file => {
+            const row = document.createElement("div");
+            row.className = "file";
+
+            const info = document.createElement("div");
+            info.className = "file-info";
+
+            const icon = document.createElement("div");
+            icon.className = "file-icon";
+            const ext = file.name.includes(".") ? file.name.split(".").pop().toUpperCase() : "FILE";
+            icon.textContent = ext.length <= 5 ? ext : "FILE";
+
+            const details = document.createElement("div");
+            const name = document.createElement("div");
+            name.className = "file-name";
+            name.textContent = file.name;
+
+            const size = document.createElement("div");
+            size.className = "file-size";
+            size.textContent = sizeText(Number(file.size) || 0);
+
+            details.append(name, size);
+            info.append(icon, details);
+
+            const link = document.createElement("a");
+            link.className = "button primary";
+            link.textContent = "↓ Download";
+            link.href = API + "/api/download/" + encodeURIComponent(file.name);
+            link.download = file.name;
+
+            row.append(info, link);
+            $("files").append(row);
+        });
+    } catch (error) {
+        $("count").textContent = "Could not load files";
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "Connection failed. Check your backend and try Refresh.";
+        $("files").append(empty);
+    } finally {
+        $("refresh").disabled = false;
+    }
+}
+
+async function uploadFiles() {
+    const password = $("password").value;
+
+    if (!password) {
+        message("Enter your upload password first.", "error");
+        $("password").focus();
+        return;
+    }
+
+    if (!selected.length) {
+        message("Choose or drag files into the upload area first.", "error");
+        return;
+    }
+
+    const invalid = selected.find(file =>
+        !file.size || file.size > MAX_SIZE ||
+        !file.name || file.name.includes("/") ||
+        file.name.includes("\\") || file.name === "." ||
+        file.name === ".." || /[\u0000-\u001f\u007f]/.test(file.name)
+    );
+
+    if (invalid) {
+        message(invalid.name + " is empty, invalid, or larger than 25 MB.", "error");
+        return;
+    }
+
+    $("upload").disabled = true;
+    $("choose").disabled = true;
+
+    let completed = 0;
+
+    try {
+        for (const file of selected) {
+            message("Uploading " + file.name + " (" + (completed + 1) + "/" + selected.length + ")...");
+
+            const response = await fetch(
+                API + "/api/upload?name=" + encodeURIComponent(file.name),
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + password,
+                        "Content-Type": "application/octet-stream"
+                    },
+                    body: file
+                }
+            );
+
+            const result = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(result.error || "Upload failed: HTTP " + response.status);
+            completed++;
+        }
+
+        selected = [];
+        $("picker").value = "";
+        message(completed + " file(s) uploaded successfully.", "success");
+        await loadFiles();
+    } catch (error) {
+        message(error.message || "Upload failed.", "error");
+    } finally {
+        $("upload").disabled = false;
+        $("choose").disabled = false;
+    }
+}
+
+$("upload").onclick = uploadFiles;
+$("refresh").onclick = loadFiles;
+
+loadFiles();
+</script>
+</body>
+</html>
